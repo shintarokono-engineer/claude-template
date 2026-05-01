@@ -30,7 +30,7 @@
 └── ...
 ```
 
-> 詳細マップが必要なら `/code-map` skill を実行。
+> 詳細マップが必要なら `/exploring-related-code` skill を実行。
 
 ## Coding Conventions
 
@@ -83,11 +83,35 @@
 このリポジトリは `~/claude-template/` から派生した `.claude/` 設定を含む。
 利用可能な subagent / skill は `.claude/agents/` と `.claude/skills/` 配下を参照。
 
-主な使い方:
+### 開発ループ別の主な skill
 
-- 計画立案 → `planner` agent
-- コード探索 → `explorer` agent
-- レビュー → `code-reviewer` / `react-reviewer` / `security-reviewer` agent
-- React 健全性監査 → `react-doctor` skill
-- コミット前チェック → `commit-check` skill
-- 構造可視化 → `code-map` skill
+| 場面 | skill / agent |
+|---|---|
+| チケット受領直後 | `/understanding-ticket` skill |
+| 着手前のコード調査 | `/exploring-related-code` skill |
+| 実装計画 | `/planning-implementation` skill, `planner` agent |
+| 実装 | `/loop` ビルトイン or 手動 |
+| コミット直前 | `/checking-commit` skill |
+| PR 直前のセルフレビュー | `/reviewing-own-changes` skill |
+| PR 説明書き | `/writing-pr-description` skill |
+| レビューコメント対応 | `/responding-to-review` skill |
+| エラー/障害調査 | `/investigating-error` skill |
+| 落ちたテストの調査 | `/debugging-failing-test` skill |
+| リリースノート作成 | `/writing-release-notes` skill |
+| React 健全性監査 | `/running-react-doctor` skill |
+| 依存パッケージ追加検討 | `/reviewing-dependency` skill |
+| env 変数のドキュメント化 | `/documenting-env-vars` skill |
+| 仕様書/RFC/decision doc 共同執筆 | `/doc-coauthoring` skill (公式) |
+| UI 作成 | `/frontend-design` skill (公式) |
+| UI テスト | `/webapp-testing` skill (公式) |
+| MCP サーバー作成 | `/mcp-builder` skill (公式) |
+| 新 skill の作成 | `/skill-creator` skill (公式) |
+| レビュー（汎用） | `/review` ビルトイン or `code-reviewer` agent |
+| セキュリティレビュー | `/security-review` ビルトイン or `security-reviewer` agent |
+| React 特化レビュー | `react-reviewer` agent |
+| テスト作成 | `test-writer` agent |
+| バグ修正 | `debugger` agent |
+| リファクタ | `refactorer` agent |
+| ドキュメント作成 | `docs-writer` agent |
+
+skill の出力は `.claude/output/<skill-name>/` に保存される（git 管轄外）。
