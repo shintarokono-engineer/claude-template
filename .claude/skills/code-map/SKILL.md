@@ -1,41 +1,41 @@
 ---
 name: code-map
-description: Generate a visual codebase map — directory tree with one-line responsibilities plus a Mermaid diagram of major module dependencies. Use when onboarding to a project, when the user asks "how is this codebase organized?", or before a large refactor.
+description: コードベースの視覚的マップを生成する — 1 行責務付きディレクトリツリー + 主要モジュール依存の Mermaid 図。プロジェクトオンボーディング時、「このコードベースはどう構成されているか?」と問われたとき、大規模リファクタの前に使う。
 ---
 
-You produce a scannable, accurate map of the codebase. Not an exhaustive index — a tour.
+走り読み可能で正確なコードベースのツアーを作ります。網羅的なインデックスではなく、ツアーです。
 
-## Process
+## 進め方
 
-1. **Top-level layout.** `ls` the repo root. Identify the entry-point folders (typically `src/`, `app/`, `packages/`, `apps/`, `services/`).
-2. **Two levels deep.** For each top-level folder, list its immediate children with a one-line responsibility derived from reading `index.ts` / a representative file / the folder's README.
-3. **Detect the architecture style.** Frontend SPA, Next.js app router, monorepo (workspaces?), microservices, library? State this up front.
-4. **Identify cross-cutting concerns.** Where do types live? Tests? Configs? Build outputs?
-5. **Build a dependency diagram.** For 5–10 of the most important modules, show what depends on what. Use Mermaid `flowchart`.
+1. **トップレベル構成。** リポジトリルートで `ls` し、エントリポイントとなるフォルダ（典型: `src/`, `app/`, `packages/`, `apps/`, `services/`）を特定する。
+2. **2 階層分。** 各トップレベルフォルダの直下を列挙し、`index.ts` / 代表ファイル / フォルダの README を読んで 1 行責務を導く。
+3. **アーキテクチャ様式を判定する。** フロントエンド SPA、Next.js App Router、モノレポ（workspaces?）、マイクロサービス、ライブラリ? まず明示する。
+4. **横断関心事を特定する。** 型はどこ? テスト? 設定? ビルド成果物?
+5. **依存図を組み立てる。** 重要モジュール 5〜10 個について、何が何に依存するかを示す。Mermaid `flowchart` を使う。
 
-## Output format
+## 出力フォーマット
 
 ```markdown
-# Codebase map
+# コードベースマップ
 
-## Architecture
-<one paragraph: SPA / monorepo / RSC / etc., key frameworks, package manager>
+## アーキテクチャ
+<1 段落: SPA / モノレポ / RSC など、主要 FW、パッケージマネージャ>
 
-## Layout
+## 構成
 
 ```
 project/
 ├── src/
-│   ├── components/    # presentational UI building blocks
-│   ├── features/      # feature-scoped logic (one folder per feature)
-│   ├── hooks/         # shared hooks
-│   ├── lib/           # framework-agnostic utilities
-│   └── api/           # API client + types
+│   ├── components/    # 表示用 UI 部品
+│   ├── features/      # 機能スコープのロジック（1 機能 = 1 フォルダ）
+│   ├── hooks/         # 共有フック
+│   ├── lib/           # FW 非依存ユーティリティ
+│   └── api/           # API クライアント + 型
 ├── tests/             # integration + e2e
 └── package.json
 ```
 
-## Module dependencies
+## モジュール依存
 
 ```mermaid
 flowchart LR
@@ -47,28 +47,28 @@ flowchart LR
   hooks --> lib
 ```
 
-## Conventions worth knowing
-- <thing>: <where>
+## 知っておくべき規約
+- <事項>: <場所>
 - ...
 
-## Where to start reading
-1. `<entrypoint file>` — application boot
-2. `<key feature folder>` — pick one feature and read end-to-end first
-3. `<test setup>` — to understand testing approach
+## どこから読み始めるか
+1. `<エントリポイント>` — アプリケーションブート
+2. `<主要 feature フォルダ>` — まず 1 機能を端から端まで読む
+3. `<テストセットアップ>` — テスト方針を理解する
 ```
 
-## Rules
+## ルール
 
-- **Mermaid only when it adds clarity.** If there are <5 meaningful arrows, skip the diagram and just write prose.
-- **Don't list every file.** Stop at directories whose contents are predictable.
-- **Verify by reading.** If you label a folder "API client", confirm by opening at least one file inside.
-- **State unknowns.** "I couldn't determine the purpose of `src/foo/` — it has 3 files with mixed concerns." Better than fabricating.
-- Keep the whole map under one screen. If the project is huge, map one slice at a time and ask which slice the user wants next.
+- **Mermaid は明確化に寄与するときだけ使う。** 意味ある矢印が 5 本未満なら図を省き、散文で書く。
+- **ファイル全部を列挙しない。** 中身が予測可能なディレクトリで止める。
+- **読んで検証する。** あるフォルダを「API クライアント」と呼ぶなら、最低 1 ファイル開いて確認する。
+- **不明点は不明と述べる。** 「`src/foo/` の目的を判定できなかった — 3 ファイルで関心事が混在」。捏造より良い。
+- マップ全体を 1 画面以内に収める。プロジェクトが巨大なら 1 スライスずつマップし、どのスライスを見たいかユーザーに尋ねる。
 
-## Variants the user might ask for
+## ユーザーが頼みうるバリエーション
 
-- **"map the auth flow"** — trace login → session → protected route. Render as a sequence diagram.
-- **"map the data flow"** — DB → API → client. Flowchart with persistence at the bottom.
-- **"map the test pyramid"** — unit / integration / e2e folders, with counts.
+- **「auth フローをマップして」** — login → session → 保護ルートを辿る。シーケンス図でレンダー。
+- **「データフローをマップして」** — DB → API → クライアント。永続層を下に置いた flowchart。
+- **「テストピラミッドをマップして」** — unit / integration / e2e フォルダと件数。
 
-For each variant, follow the same pattern: read enough to be accurate, render minimally, label honestly.
+各バリエーションでも同じ流れ: 正確になる程度に読み、最小限にレンダー、正直にラベル付け。

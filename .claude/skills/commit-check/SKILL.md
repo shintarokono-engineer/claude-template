@@ -1,69 +1,69 @@
 ---
 name: commit-check
-description: Pre-commit quality gate. Runs the project's lint, typecheck, and relevant tests on staged or recently-changed files; scans for accidentally staged secrets and large binaries. Use right before `git commit`, or whenever you want a green-light check after editing.
+description: コミット前の品質ゲート。プロジェクトの lint、型チェック、関連テストをステージ済み/直近変更ファイルに対して実行し、誤って混入したシークレットや巨大バイナリをスキャンする。`git commit` の直前、または編集後に緑判定を取りたいときに使う。
 ---
 
-You run a fast, project-aware sanity check before code is committed. You DO NOT commit. You DO NOT push. You report.
+コミットされる前に、プロジェクトを意識した高速な正気度チェックを実行します。コミットも push もしません。報告のみです。
 
-## Process
+## 進め方
 
-1. **Detect the project shape.**
-   - Read `package.json` (root and any workspace package). Extract `scripts.lint`, `scripts.typecheck` / `tsc`, `scripts.test`.
-   - Fall back to common conventions: `npm run lint`, `npx tsc --noEmit`, `npm test`.
-   - For non-JS projects: detect `pyproject.toml` (ruff/mypy/pytest), `Cargo.toml` (clippy/cargo test), `go.mod` (go vet, go test).
+1. **プロジェクト形を検出する。**
+   - `package.json`（ルート + workspace 各パッケージ）を読む。`scripts.lint`、`scripts.typecheck` / `tsc`、`scripts.test` を抽出。
+   - 通例にフォールバック: `npm run lint`、`npx tsc --noEmit`、`npm test`。
+   - 非 JS プロジェクトでは: `pyproject.toml`（ruff/mypy/pytest）、`Cargo.toml`（clippy/cargo test）、`go.mod`（go vet, go test）を検出。
 
-2. **Identify what changed.**
+2. **何が変わったかを特定する。**
    ```bash
-   git diff --name-only --staged       # if anything is staged
-   git diff --name-only                 # otherwise, working tree changes
+   git diff --name-only --staged       # ステージあり
+   git diff --name-only                 # なければ作業ツリー差分
    ```
-   If both empty: report "nothing to check" and stop.
+   どちらも空なら「チェック対象なし」と報告して終わる。
 
-3. **Run checks, scoped to changed files where possible.**
-   - **Lint** — `npx eslint <files>` (or `ruff check <files>`).
-   - **Typecheck** — typically project-wide (`npx tsc --noEmit`); cannot scope easily.
-   - **Format** — `npx prettier --check <files>`.
-   - **Tests** — run tests related to changed files: `npm test -- --findRelatedTests <files>` (Jest) or `npx vitest run --related <files>`. If no relation tooling, fall back to full test suite for changed packages.
+3. **チェックを実行する。可能な限り変更ファイルにスコープを絞る。**
+   - **Lint** — `npx eslint <files>`（または `ruff check <files>`）。
+   - **型チェック** — 通常はプロジェクト全体（`npx tsc --noEmit`）。スコープ絞りは難しい。
+   - **フォーマット** — `npx prettier --check <files>`。
+   - **テスト** — 変更ファイル関連のテストを実行: `npm test -- --findRelatedTests <files>`（Jest）または `npx vitest run --related <files>`。関連検出ツールがなければ、変更パッケージの全テストにフォールバック。
 
-4. **Secret scan.** Grep staged files for high-risk patterns:
+4. **シークレットスキャン。** 高リスクパターンをステージ済みファイルから grep:
    ```
    AKIA[0-9A-Z]{16}             # AWS access key
    sk_live_[0-9a-zA-Z]{24,}     # Stripe live key
    ghp_[0-9a-zA-Z]{36}          # GitHub PAT
    -----BEGIN.*PRIVATE KEY-----
    ```
-   Plus a heuristic check for `.env*`, `*.pem`, `*.key` being staged.
+   加えて `.env*`, `*.pem`, `*.key` がステージされていないかをヒューリスティック確認。
 
-5. **Large file check.** Flag any staged file > 1 MB. The user almost never wants binaries in git.
+5. **巨大ファイルチェック。** 1 MB 超のステージ済みファイルを警告。バイナリは git に入れたくないことがほとんど。
 
-## Output format
+## 出力フォーマット
 
 ```
 ## commit-check
 
-### Scope
-<N files staged | working-tree changes>: file1, file2, ...
+### スコープ
+<N ファイルステージ済み | 作業ツリー変更>: file1, file2, ...
 
-### Results
-- Lint:        PASS / FAIL (<count> issues)
-- Typecheck:   PASS / FAIL (<first error>)
-- Format:      PASS / FAIL
-- Tests:       PASS / FAIL (<failing test name>)
-- Secrets:     CLEAN / FOUND (<file>:<line> <kind>)
-- Large files: NONE / <file> (<size>)
+### 結果
+- Lint:        PASS / FAIL (<件数>)
+- 型チェック:  PASS / FAIL (<最初のエラー>)
+- フォーマット: PASS / FAIL
+- テスト:      PASS / FAIL (<失敗テスト名>)
+- シークレット: CLEAN / FOUND (<file>:<line> <種別>)
+- 巨大ファイル: NONE / <file> (<size>)
 
-### Verdict
-<green: safe to commit | red: fix the items above first>
+### 判定
+<緑: コミット OK | 赤: 上記を直してから>
 
-### Suggested fixes
-- <only when something failed>
+### 修正候補
+- <失敗があるときのみ>
 ```
 
-## Rules
+## ルール
 
-- **Do not run commands the project doesn't support.** If `package.json` has no `lint` script and no eslint config, skip lint and say "no lint configured."
-- **Do not auto-fix.** Recommend `npx eslint --fix` etc., but the user runs it.
-- **Do not commit.** This skill is a check, not an action.
-- **Be fast.** Prefer scoped checks over full-repo runs. Whole-repo `tsc` is the usual exception because TS doesn't support file-scoped checks.
-- If a check is slow (>30s), warn the user and let them skip with a flag.
-- A red verdict is not a blocker — it's information. The user decides whether to commit anyway.
+- **プロジェクトが対応していないコマンドは実行しない。** `package.json` に `lint` script も eslint 設定もないなら、lint をスキップして「lint 設定なし」と述べる。
+- **自動修正しない。** `npx eslint --fix` 等を案内するが、実行はユーザーが行う。
+- **コミットしない。** これはチェックスキルでありアクションではない。
+- **高速にする。** 全リポジトリ実行よりスコープ実行を優先。例外的に全リポジトリ `tsc` は TS の制約上仕方ない。
+- チェックが遅い（>30 秒）場合は警告し、フラグでスキップ可能にする。
+- 赤判定はブロッカーではなく情報。コミット強行するかはユーザー判断。

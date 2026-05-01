@@ -1,72 +1,72 @@
 ---
 name: react-doctor
-description: Run an automated React/Next.js codebase health audit using the react-doctor CLI. Returns a 0–100 health score plus file-level diagnostics across performance, security, architecture, bundle size, accessibility, and dead code. Use after non-trivial React changes, before PRs, or when investigating "the codebase feels slow / messy."
+description: react-doctor CLI で React/Next.js コードベースの自動健全性監査を実行する。0〜100 のヘルススコアと、性能・セキュリティ・アーキテクチャ・バンドルサイズ・アクセシビリティ・デッドコードに関するファイル単位の診断を返す。非自明な React 変更後、PR 前、または「コードベースが遅い/散らかっている気がする」を調べたいときに使う。
 ---
 
-You wrap the [react-doctor](https://github.com/millionco/react-doctor) CLI and turn its output into actionable next steps.
+[react-doctor](https://github.com/millionco/react-doctor) CLI をラップし、その出力を実行可能な次のアクションに変換します。
 
-## When to use this skill
+## 使うべきとき
 
-- After a non-trivial React/TS change, as a sanity check before opening a PR.
-- When the user asks for a "code health" or "anti-pattern" review of the React side of the project.
-- Periodically as part of `react-reviewer` agent's workflow.
-- **Skip** for tiny changes (typo, single-line fix, non-React code).
+- 非自明な React/TS 変更後の PR 前サニティチェック。
+- ユーザーが React 側の「コードヘルス」「アンチパターン」レビューを求めているとき。
+- `react-reviewer` agent のワークフローの一部として定期的に。
+- **使わない**: 些細な変更（typo、1 行修正、React 以外）。
 
-## How to run
+## 実行方法
 
 ```bash
 npx -y react-doctor@latest .
 ```
 
-Run from the project root. No installation needed. The tool auto-detects React, Next.js, Vite, Remix, or React Native.
+プロジェクトルートから実行する。インストール不要。React / Next.js / Vite / Remix / React Native を自動検出する。
 
-### Useful flags (check `--help` for the current set)
+### 便利なフラグ（最新の一覧は `--help` 参照）
 
-- `--json` — machine-readable output, easier to parse and quote selectively.
-- `--changed` — restrict analysis to files changed vs. main branch (faster on large repos, more relevant for PR reviews).
+- `--json` — 機械可読出力。選択的な引用がしやすい。
+- `--changed` — main ブランチに対する変更ファイルだけに絞る（大きなリポジトリで高速、PR レビュー向け）。
 
-## What it checks
+## 何を見るか
 
-60+ rules across:
+60+ ルールが以下のカテゴリにわたる:
 
-- **Performance** — re-render hot spots, missing memoization where it matters, unnecessary effects.
-- **Architecture** — component boundaries, prop drilling, server/client split.
-- **Bundle size** — heavy imports, untreeshakable patterns.
-- **Security** — `dangerouslySetInnerHTML`, exposed env vars, unsafe redirects.
-- **Accessibility** — missing labels, keyboard handling, semantic HTML.
-- **Dead code** — unreachable branches, unused exports.
+- **性能** — 再レンダリングのホットスポット、必要箇所のメモ漏れ、不要な effect。
+- **アーキテクチャ** — コンポーネント境界、prop drilling、サーバー/クライアント分離。
+- **バンドルサイズ** — 重い import、tree-shaking しにくいパターン。
+- **セキュリティ** — `dangerouslySetInnerHTML`、晒された env、安全でないリダイレクト。
+- **アクセシビリティ** — ラベル不足、キーボード操作、セマンティック HTML。
+- **デッドコード** — 到達不能分岐、未使用 export。
 
-## How to present results
+## 結果の伝え方
 
-1. Run the command and capture output.
-2. **Lead with the score** ("Health: 78/100").
-3. **Group findings by severity**, not by rule. The user cares about what to fix first, not which rule fired.
-4. For each high-priority finding, quote the file:line and propose a concrete fix.
-5. **Don't dump the full output.** Summarize. Link the user to the raw output if they want more.
+1. コマンドを実行し出力を取得する。
+2. **スコアを最初に出す**（「Health: 78/100」）。
+3. **重大度別にグルーピング**（ルール別ではない）。ユーザーは「最初に何を直すか」を知りたいのであり、どのルールが発火したかではない。
+4. 高優先度の指摘は file:line を引用し、具体的な修正案を提示する。
+5. **生出力を全部貼らない。** 要約する。詳細が欲しければ raw output へ誘導する。
 
-### Output template
+### 出力テンプレート
 
 ```
-## react-doctor: <SCORE>/100
+## react-doctor: <スコア>/100
 
-## Top issues to fix
-1. **<file.tsx:line>** — <issue summary>
-   <one-line fix>
+## 最優先で直したい指摘
+1. **<file.tsx:line>** — <問題サマリ>
+   <1 行修正案>
 2. ...
 
-## Lower priority
-- <file:line> — <issue> (optional fix)
+## 優先度低
+- <file:line> — <問題>（修正は任意）
 
-## What's healthy
-<short list of things the audit found good — don't pad>
+## 健全な点
+<監査が良好と判定したもの — 水増しせず簡潔に>
 
-## Run again with
-`npx -y react-doctor@latest --json .` for the full machine-readable report.
+## 詳細を再取得するなら
+`npx -y react-doctor@latest --json .` で機械可読フルレポート。
 ```
 
-## Rules
+## ルール
 
-- If the tool fails to run (e.g. not a React project), say so and stop. Don't fabricate findings.
-- Don't auto-apply fixes. Recommend, let the user decide.
-- If the score is high (>90) and the user asked for a routine review, say "looks healthy" and move on. Don't manufacture concerns.
-- Cite issues by file:line, not by rule ID alone.
+- ツール実行が失敗（例: React プロジェクトでない）したらそれを報告して止まる。指摘を捏造しない。
+- 修正は自動適用しない。提案にとどめてユーザー判断を仰ぐ。
+- スコアが高く（>90）、ユーザーが日常レビューを求めているなら「健全」と返して終わる。懸念を捏造しない。
+- 指摘はルール ID 単独ではなく file:line で引用する。
