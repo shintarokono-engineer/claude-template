@@ -32,6 +32,7 @@
 │   │   ├── responding-to-review/     # レビューコメント対応
 │   │   ├── debugging-failing-test/   # 落ちテスト調査
 │   │   ├── writing-release-notes/    # リリースノート
+│   │   ├── writing-verification-checklist/ # 動作確認観点（コピペ用 markdown）
 │   │   ├── documenting-env-vars/     # env 変数のドキュメント化
 │   │   ├── reviewing-dependency/     # 依存パッケージ追加レビュー
 │   │   ├── running-react-doctor/     # react-doctor CLI ラッパー
@@ -117,9 +118,11 @@ cp .claude/settings.local.json.example .claude/settings.local.json
 | `refactorer` | 振る舞いを保存するリファクタ |
 | `docs-writer` | README/JSDoc/ADR |
 
-## 含まれる自作 skill（13 個）
+## 含まれる自作 skill（14 個）
 
 全 skill は **必要情報を `AskUserQuestion` でユーザーから収集してから動く** ヒアリング駆動設計。成果物は `.claude/output/<skill-name>/` に書き出す（git 管轄外）。
+
+frontmatter には `disable-model-invocation: true` を設定済み（手動 `/skill-name` 起動限定 + Claude のコンテキスト節約）。auto 起動を許可したい skill は当該行を削除。
 
 ### 開発ループ核（毎タスク）
 
@@ -136,6 +139,7 @@ cp .claude/settings.local.json.example .claude/settings.local.json
 
 | Skill | 用途 |
 |---|---|
+| `writing-verification-checklist` | 動作確認観点を copy-paste 可能な markdown checklist で出力 |
 | `responding-to-review` | レビューコメント対応（修正 / 反論 / 別 PR / 既対応に分類） |
 | `debugging-failing-test` | 落ちテスト調査（テスト誤 / 実装誤 / 環境 / フレーキー判別） |
 | `writing-release-notes` | リリースノート（破壊的変更を最上位、読者別トーン） |

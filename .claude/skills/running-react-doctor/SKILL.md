@@ -1,6 +1,8 @@
 ---
 name: running-react-doctor
 description: react-doctor CLI で React/Next.js コードベースの自動健全性監査を実行する。0〜100 のヘルススコアと、性能・セキュリティ・アーキテクチャ・バンドルサイズ・アクセシビリティ・デッドコードに関するファイル単位の診断を返す。React/TS の非自明な変更後、PR 前、コードベースが「遅い/散らかっている」と感じたとき、定期健診として使う。
+allowed-tools: Read Write Edit Bash Glob Grep
+disable-model-invocation: true
 ---
 
 [react-doctor](https://github.com/millionco/react-doctor) CLI をラップし、その出力を実行可能な次のアクションに変換します。
@@ -14,7 +16,7 @@ description: react-doctor CLI で React/Next.js コードベースの自動健�
 
 ## 進め方
 
-1. **必要情報をヒアリング** — `AskUserQuestion` で順次確認。最初の指示に含まれている項目はスキップ。納得まで掘り下げ可:
+1. **必要情報をヒアリング** — `AskUserQuestion` で順次。最初の指示に含まれている項目はスキップ。納得まで掘り下げ可。1 ラウンドあたり最大 4 質問のため、項目が多い場合は複数ラウンドに分ける:
    - **スコープ**: リポジトリ全体 / `--changed`（main 比較で変更ファイルのみ） / 特定パス
    - **出力詳細度**: 高優先度のみ / 全カテゴリ / `--json` 含むフルレポート
    - **対象環境**: ローカル実行 / プロジェクトが React でない可能性を先に確認

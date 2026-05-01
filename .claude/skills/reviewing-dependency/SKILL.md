@@ -1,6 +1,8 @@
 ---
 name: reviewing-dependency
 description: パッケージ追加/更新/置き換えの判断材料を集める。ライセンス・メンテ状況・サイズ・依存ツリー・既知脆弱性・代替候補を構造化し、追加可否のレビューを支援する。`npm install` / `pip install` 前に使う。
+allowed-tools: Read Write Edit Bash Glob Grep
+disable-model-invocation: true
 ---
 
 「これ入れて大丈夫?」を、感覚ではなく材料で判断するための skill です。
@@ -14,7 +16,7 @@ description: パッケージ追加/更新/置き換えの判断材料を集め�
 
 ## 進め方
 
-1. **必要情報をヒアリング** — `AskUserQuestion` で順次:
+1. **必要情報をヒアリング** — `AskUserQuestion` で順次。最初の指示に含まれている項目はスキップ。納得まで掘り下げ可。1 ラウンドあたり最大 4 質問のため、項目が多い場合は複数ラウンドに分ける:
    - **候補パッケージ**: 名前 / npm/pypi の URL
    - **用途**: 何の問題を解決したいか
    - **代替検討状況**: 標準 API で代替可能か検討済み / 候補が複数ある / 既に決め打ち

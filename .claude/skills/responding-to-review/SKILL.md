@@ -1,6 +1,8 @@
 ---
 name: responding-to-review
 description: PR レビューコメントを読み込み、各コメントへの対応方針（同意して修正 / 反論 / 議論継続 / 別 PR）を構造化する。レビューコメント受領時に使う。実コード修正は別途、計画のみ。
+allowed-tools: Read Write Edit Bash Glob Grep
+disable-model-invocation: true
 ---
 
 レビューコメントを「対応する/しない」と「どう答えるか」に分解します。実装は別。
@@ -13,7 +15,7 @@ description: PR レビューコメントを読み込み、各コメントへの�
 
 ## 進め方
 
-1. **必要情報をヒアリング** — `AskUserQuestion` で順次:
+1. **必要情報をヒアリング** — `AskUserQuestion` で順次。最初の指示に含まれている項目はスキップ。納得まで掘り下げ可。1 ラウンドあたり最大 4 質問のため、項目が多い場合は複数ラウンドに分ける:
    - **対象 PR**: PR 番号 / URL / `gh pr view <num> --comments` で取得
    - **コメント**: 全件 / 未対応のみ / 特定コメント ID
    - **同意/反論の方針**: 全部受け入れる / 議論したい点あり / レビュアー意図不明な箇所あり

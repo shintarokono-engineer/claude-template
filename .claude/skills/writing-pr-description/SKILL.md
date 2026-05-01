@@ -1,6 +1,8 @@
 ---
 name: writing-pr-description
 description: PR の説明書きを生成する。差分・コミット履歴・関連 issue を読み込み、What/Why/How・テスト方法・スクリーンショット欄・リスクとロールバックを含む構造化された PR 本文を作る。PR 作成直前、レビューを受ける前に使う。
+allowed-tools: Read Write Edit Bash Glob Grep
+disable-model-invocation: true
 ---
 
 レビュアーが 30 秒で全体像を掴めて、3 分で詳細を追える PR 本文を作ります。
@@ -14,7 +16,7 @@ description: PR の説明書きを生成する。差分・コミット履歴・�
 
 ## 進め方
 
-1. **必要情報をヒアリング** — `AskUserQuestion` で順次:
+1. **必要情報をヒアリング** — `AskUserQuestion` で順次。最初の指示に含まれている項目はスキップ。納得まで掘り下げ可。1 ラウンドあたり最大 4 質問のため、項目が多い場合は複数ラウンドに分ける:
    - **対象**: 現在のブランチ / 指定 PR 番号（`gh pr view`） / branch 名直指定
    - **比較先**: `main` / `develop` / その他
    - **トーン**: 簡潔（数行 + 箇条書き） / 詳細（背景含む） / 既存テンプレ準拠

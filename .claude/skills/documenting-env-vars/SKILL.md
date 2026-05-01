@@ -1,6 +1,8 @@
 ---
 name: documenting-env-vars
 description: .env.example / .env.sample / 設定ファイルから環境変数を抽出し、用途・必須性・デフォルト値・取得方法を表形式でドキュメント化する。プロジェクト参画直後、新メンバーオンボーディング、env が増えた時に使う。
+allowed-tools: Read Write Edit Bash Glob Grep
+disable-model-invocation: true
 ---
 
 「この変数は何で、どこから取るのか」を一目で分かる表に整理します。
@@ -14,7 +16,7 @@ description: .env.example / .env.sample / 設定ファイルから環境変数�
 
 ## 進め方
 
-1. **必要情報をヒアリング** — `AskUserQuestion` で順次:
+1. **必要情報をヒアリング** — `AskUserQuestion` で順次。最初の指示に含まれている項目はスキップ。納得まで掘り下げ可。1 ラウンドあたり最大 4 質問のため、項目が多い場合は複数ラウンドに分ける:
    - **対象ファイル**: `.env.example` / `.env.sample` / `config/*.example` / 自由パス指定
    - **不明変数の扱い**: ユーザーに 1 つずつ聞く / コメントから推測 / 「不明」と記載
    - **出力先**: `docs/env.md` / `README.md` の追記 / `.claude/output/...` のみ
