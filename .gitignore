@@ -1,0 +1,16 @@
+# Personal local overrides — never commit
+.claude/settings.local.json
+
+# MCP actual config (only mcp.example.json is committed)
+.mcp.json
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~

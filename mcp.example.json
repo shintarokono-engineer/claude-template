@@ -1,0 +1,40 @@
+{
+  "_comment": "Rename to .mcp.json and uncomment servers you need by removing the leading underscore from each key. Set tokens via env vars only — never inline.",
+  "mcpServers": {
+    "_github_example": {
+      "_doc": "GitHub MCP server. Requires: GITHUB_PERSONAL_ACCESS_TOKEN env var (PAT with repo + read:org).",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "_slack_example": {
+      "_doc": "Slack MCP server. Requires: SLACK_BOT_TOKEN env var.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+      }
+    },
+    "_linear_example": {
+      "_doc": "Linear MCP server. Requires: LINEAR_API_KEY env var.",
+      "command": "npx",
+      "args": ["-y", "mcp-linear"],
+      "env": {
+        "LINEAR_API_KEY": "${LINEAR_API_KEY}"
+      }
+    },
+    "_postgres_example": {
+      "_doc": "Postgres read-only MCP. Replace connection string. Use a read-only role.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres", "${POSTGRES_READONLY_URL}"]
+    },
+    "_filesystem_example": {
+      "_doc": "Filesystem MCP. Restrict to specific directories.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${HOME}/projects"]
+    }
+  }
+}
