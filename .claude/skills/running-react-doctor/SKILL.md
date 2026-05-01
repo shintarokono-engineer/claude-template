@@ -1,6 +1,6 @@
 ---
 name: running-react-doctor
-description: react-doctor CLI で React/Next.js コードベースの自動健全性監査を実行する。0〜100 のヘルススコアと、性能・セキュリティ・アーキテクチャ・バンドルサイズ・アクセシビリティ・デッドコードに関するファイル単位の診断を返す。React/TS の非自明な変更後、PR 前、コードベースが「遅い/散らかっている」と感じたとき、定期健診として使う。
+description: react-doctor CLI で React/Next.js コードベースの自動健全性監査を実行する。0〜100 のヘルススコアと、性能・セキュリティ・アーキテクチャ・バンドルサイズ・アクセシビリティ・デッドコードに関するファイル単位の診断を返す。複数ファイル横断・新機能・hooks 改修などの React/TS 変更後、PR 前、コードベースが「遅い/散らかっている」と感じたとき、定期健診として使う。
 allowed-tools: Read Write Edit Bash Glob Grep
 disable-model-invocation: true
 ---
@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 ## いつ使うか
 
-- 非自明な React/TS 変更後の PR 前サニティチェック。
+- 複数ファイル横断・新機能・hooks 改修などの React/TS 変更後の PR 前サニティチェック。
 - ユーザーが React 側の「コードヘルス」「アンチパターン」レビューを求めているとき。
 - 定期健診として（週次など）。
 - **使わない**: 些細な変更（typo、1 行修正、React 以外）。
