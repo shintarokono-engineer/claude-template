@@ -1,6 +1,19 @@
 {
   "_comment": "Rename to .mcp.json and uncomment servers you need by removing the leading underscore from each key. Set tokens via env vars only — never inline.",
   "mcpServers": {
+    "_serena_example": {
+      "_doc": "Serena MCP — LSP ベースのセマンティックコード検索/編集（find_symbol / replace_symbol_body 等）。要 uv インストール (https://docs.astral.sh/uv/). --context ide-assistant が Claude Code 推奨。--project を外すと起動時にプロジェクト指定。",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena-mcp-server",
+        "--context",
+        "ide-assistant",
+        "--project",
+        "${PWD}"
+      ]
+    },
     "_github_example": {
       "_doc": "GitHub MCP server. Requires: GITHUB_PERSONAL_ACCESS_TOKEN env var (PAT with repo + read:org).",
       "command": "npx",

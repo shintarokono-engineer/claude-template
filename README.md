@@ -98,6 +98,19 @@ mv mcp.example.json .mcp.json
 
 `.mcp.json` 実体は `.gitignore` で除外推奨。
 
+#### 含まれる MCP 雛形
+
+| Server | 用途 | 前提 |
+|---|---|---|
+| `serena` | LSP ベースのセマンティックコード検索/編集（`find_symbol` / `replace_symbol_body` 等） | [uv](https://docs.astral.sh/uv/) インストール |
+| `github` | issue / PR / リポジトリ操作 | `GITHUB_PERSONAL_ACCESS_TOKEN` (repo + read:org) |
+| `slack` | メッセージ送受信・チャンネル検索 | `SLACK_BOT_TOKEN`, `SLACK_TEAM_ID` |
+| `linear` | チケット参照・更新 | `LINEAR_API_KEY` |
+| `postgres` | DB 読み取り（read-only ロール推奨） | `POSTGRES_READONLY_URL` |
+| `filesystem` | 指定ディレクトリのファイル操作 | パス指定 |
+
+> Serena は `--project ${PWD}` をプロジェクトルートで起動する想定。複数プロジェクトを横断するなら `--project` を外し、起動後に `activate_project` ツールで都度切り替え。
+
 ### 4. 個人ローカル設定を使うなら
 
 ```bash
