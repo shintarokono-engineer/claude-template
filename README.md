@@ -36,7 +36,8 @@
 │   │   ├── documenting-env-vars/     # env 変数のドキュメント化
 │   │   ├── reviewing-dependency/     # 依存パッケージ追加レビュー
 │   │   ├── running-react-doctor/     # react-doctor CLI ラッパー
-│   │   └── checking-commit/          # コミット前チェック
+│   │   ├── checking-commit/          # コミット前チェック
+│   │   └── save-learning-note/       # 技術 Q&A を学習ノート vault に追記/新規
 │   ├── output/                       # skill 成果物の保存先（git 管轄外）
 │   ├── settings.json                 # permissions + 軽量 hooks
 │   └── settings.local.json.example   # 個人ローカル上書き例
@@ -118,7 +119,7 @@ cp .claude/settings.local.json.example .claude/settings.local.json
 | `refactorer` | 振る舞いを保存するリファクタ |
 | `docs-writer` | README/JSDoc/ADR |
 
-## 含まれる自作 skill（14 個）
+## 含まれる自作 skill（15 個）
 
 全 skill は **必要情報を `AskUserQuestion` でユーザーから収集してから動く** ヒアリング駆動設計。成果物は `.claude/output/<skill-name>/` に書き出す（git 管轄外）。
 
@@ -157,6 +158,12 @@ frontmatter には `disable-model-invocation: true` を設定済み（手動 `/s
 |---|---|
 | `running-react-doctor` | `npx react-doctor` 実行 + 優先度付き修正提案 |
 | `checking-commit` | コミット前チェック（lint/typecheck/関連テスト/秘密情報スキャン） |
+
+### 個人ナレッジ管理
+
+| Skill | 用途 |
+|---|---|
+| `save-learning-note` | 直近の技術 Q&A を Obsidian 学習ノート vault に追記/新規（auto 起動許可。ユーザーグローバル `~/.claude/CLAUDE.md` の提案ルールと併用すると、回答末尾で「学習ノートに追記しますか?」と Claude が能動的に提案する） |
 
 ## デフォルトで取り込まれる公式 skill（5 個）
 
